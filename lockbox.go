@@ -19,12 +19,12 @@ type record struct {
 	UpdatedAt time.Time
 }
 
-// Lockbox представляет список хранимых записей
-type Lockbox []record
+// List представляет список хранимых записей
+type List []record
 
 // Add добавляет запись в Lockbox.
 // Если запись с таким title уже существует, она будет обновлена.
-func (l *Lockbox) Add(title string, password string) {
+func (l *List) Add(title string, password string) {
 	// Сначала проверим, нет ли записи с таким title
 	for i, rec := range *l {
 		if rec.Title == title {
@@ -45,7 +45,7 @@ func (l *Lockbox) Add(title string, password string) {
 }
 
 // Get возвращает пароль записи с указанным title.
-func (l *Lockbox) Get(title string) (string, error) {
+func (l *List) Get(title string) (string, error) {
 	for _, rec := range *l {
 		if rec.Title == title {
 			return rec.Password, nil
@@ -56,7 +56,7 @@ func (l *Lockbox) Get(title string) (string, error) {
 
 // Save method сохраняет Lockbox в формате JSON в
 // указанном файле.
-func (l *Lockbox) Save(filename string) error {
+func (l *List) Save(filename string) error {
 	jsonList, err := json.Marshal(l)
 	if err != nil {
 		return err
@@ -67,7 +67,7 @@ func (l *Lockbox) Save(filename string) error {
 
 // Load загружает содержимое файла в формате JSON
 // в Lockbox.
-func (l *Lockbox) Load(filename string) error {
+func (l *List) Load(filename string) error {
 	fileContent, err := os.ReadFile(filename)
 	if err != nil {
 		if errors.Is(err, os.ErrNotExist) {

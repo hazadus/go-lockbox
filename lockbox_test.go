@@ -7,7 +7,7 @@ import (
 )
 
 func TestAdd(t *testing.T) {
-	lockbox := lockbox.Lockbox{}
+	lockbox := lockbox.List{}
 	title := "service"
 	password := "12345678"
 
@@ -24,7 +24,7 @@ func TestAdd(t *testing.T) {
 // TestAddUpdates проверяет, что при добавлении
 // записи с существующим Title, запись будет обновлена
 func TestAddUpdates(t *testing.T) {
-	lockbox := lockbox.Lockbox{}
+	lockbox := lockbox.List{}
 	title := "service"
 	password := "12345678"
 	lockbox.Add(title, password)
@@ -48,7 +48,7 @@ func TestAddUpdates(t *testing.T) {
 }
 
 func TestGet(t *testing.T) {
-	lockbox := lockbox.Lockbox{}
+	lockbox := lockbox.List{}
 	title := "service"
 	password := "12345678"
 	lockbox.Add(title, password)
@@ -61,7 +61,7 @@ func TestGet(t *testing.T) {
 }
 
 func TestGetFailsWithUnknownTitle(t *testing.T) {
-	lockbox := lockbox.Lockbox{}
+	lockbox := lockbox.List{}
 	title := "service"
 	password := "12345678"
 	lockbox.Add(title, password)
