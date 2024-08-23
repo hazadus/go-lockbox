@@ -4,7 +4,10 @@ Package lockbox содержит логику для работы хранимы
 package lockbox
 
 import (
+	"encoding/json"
+	"errors"
 	"fmt"
+	"os"
 	"time"
 )
 
@@ -41,7 +44,7 @@ func (l *Lockbox) Add(title string, password string) {
 	*l = append(*l, rec)
 }
 
-// Get возвращает пароль записи с указанным title
+// Get возвращает пароль записи с указанным title.
 func (l *Lockbox) Get(title string) (string, error) {
 	for _, rec := range *l {
 		if rec.Title == title {
@@ -49,4 +52,33 @@ func (l *Lockbox) Get(title string) (string, error) {
 		}
 	}
 	return "", fmt.Errorf("Item '%s' does not exist", title)
+}
+
+// Save method сохраняет Lockbox в формате JSON в
+// указанном файле.
+func (l *Lockbox) Save(filename string) error {
+	jsonList, err := json.Marshal(l)
+	if err != nil {
+		return err
+	}
+
+	return os.WriteFile(filename, jsonList, 0644)
+}
+
+// Load загружает содержимое файла в формате JSON
+// в Lockbox.
+func (l *Lockbox) Load(filename string) error {
+	fileContent, err := os.ReadFile(filename)
+	if err != nil {
+		if errors.Is(err, os.ErrNotExist) {
+			return nil
+		}
+		return err
+	}
+
+	if len(fileContent) == 0 {
+		return nil
+	}
+
+	return json.Unmarshal(fileContent, l)
 }
