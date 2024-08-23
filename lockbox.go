@@ -3,7 +3,10 @@ Package lockbox содержит логику для работы хранимы
 */
 package lockbox
 
-import "time"
+import (
+	"fmt"
+	"time"
+)
 
 // record представляет хранимую запись
 type record struct {
@@ -36,4 +39,14 @@ func (l *Lockbox) Add(title string, password string) {
 		UpdatedAt: timeCreated,
 	}
 	*l = append(*l, rec)
+}
+
+// Get возвращает пароль записи с указанным title
+func (l *Lockbox) Get(title string) (string, error) {
+	for _, rec := range *l {
+		if rec.Title == title {
+			return rec.Password, nil
+		}
+	}
+	return "", fmt.Errorf("Item '%s' does not exist", title)
 }

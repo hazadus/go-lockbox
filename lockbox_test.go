@@ -46,3 +46,32 @@ func TestAddUpdates(t *testing.T) {
 		t.Errorf("UpdatedAt should not be equal to CreatedAt after update.")
 	}
 }
+
+func TestGet(t *testing.T) {
+	lockbox := lockbox.Lockbox{}
+	title := "service"
+	password := "12345678"
+	lockbox.Add(title, password)
+
+	receivedPassword, _ := lockbox.Get(title)
+
+	if receivedPassword != password {
+		t.Errorf("Expected %q, got %q instead.", password, receivedPassword)
+	}
+}
+
+func TestGetFailsWithUnknownTitle(t *testing.T) {
+	lockbox := lockbox.Lockbox{}
+	title := "service"
+	password := "12345678"
+	lockbox.Add(title, password)
+
+	receivedPassword, err := lockbox.Get("unknown")
+
+	if err == nil {
+		t.Errorf("Get must fail with unknown title.")
+	}
+	if receivedPassword != "" {
+		t.Errorf("Expected '', got %q instead.", receivedPassword)
+	}
+}
