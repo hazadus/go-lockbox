@@ -20,3 +20,29 @@ func TestAdd(t *testing.T) {
 		t.Errorf("Expected %q, got %q instead.", password, lockbox[0].Password)
 	}
 }
+
+// TestAddUpdates проверяет, что при добавлении
+// записи с существующим Title, запись будет обновлена
+func TestAddUpdates(t *testing.T) {
+	lockbox := lockbox.Lockbox{}
+	title := "service"
+	password := "12345678"
+	lockbox.Add(title, password)
+	newPassword := "87654321"
+
+	lockbox.Add(title, newPassword)
+
+	if len(lockbox) != 1 {
+		t.Fatalf("Size of lockbox should not increase.")
+	}
+
+	if lockbox[0].Title != title {
+		t.Errorf("Expected %q, got %q instead.", title, lockbox[0].Title)
+	}
+	if lockbox[0].Password != newPassword {
+		t.Errorf("Expected %q, got %q instead.", newPassword, lockbox[0].Password)
+	}
+	if lockbox[0].CreatedAt == lockbox[0].UpdatedAt {
+		t.Errorf("UpdatedAt should not be equal to CreatedAt after update.")
+	}
+}
