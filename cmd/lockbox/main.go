@@ -11,9 +11,15 @@ import (
 	"github.com/hazadus/go-lockbox"
 )
 
-var lockboxFileName = ".lockbox.json"
+var lockboxFileName = "~/.lockbox.json"
 
 func main() {
+	// Получаем имя файла из переменной окружения (при наличии)
+	if envLockboxFileName := os.Getenv("GO_LOCKBOX_FILENAME"); envLockboxFileName != "" {
+		lockboxFileName = envLockboxFileName
+	}
+
+	// Опеделяем флаги и получаем их значения
 	addFlag := flag.String("add", "", "Название сервиса")
 	passwordFlag := flag.String("pwd", "", "Пароль")
 	getFlag := flag.String("get", "", "Получить пароль от указанного сервиса")
