@@ -10,9 +10,9 @@ CLI tool для удобного хранения и использования 
 
 - ✅ Хранение списка в файле в формате JSON.
 - ✅ Настройка файла для хранения списка через env var.
-- [ ] Тесты CLI.
+- ✅ Тесты CLI.
 - Флаги команды:
-	- ✅ `-add service -pwd password`: добавить запись `service` с паролем `password.
+	- ✅ `-add service -pwd password`: добавить запись `service` с паролем `password`.
 	- ✅ `-get service`: получить пароль от записи `service`.
 	- [ ] `-delete service`
 	- [ ] `-list`
