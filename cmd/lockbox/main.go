@@ -16,6 +16,7 @@ var lockboxFileName = ".lockbox.json"
 func main() {
 	addFlag := flag.String("add", "", "Название сервиса")
 	passwordFlag := flag.String("pwd", "", "Пароль")
+	getFlag := flag.String("get", "", "Получить пароль от указанного сервиса")
 	flag.Parse()
 
 	recordList := &lockbox.List{}
@@ -42,6 +43,10 @@ func main() {
 			fmt.Fprintln(os.Stderr, err)
 			os.Exit(1)
 		}
+	case *getFlag != "":
+		title := *getFlag
+		password, _ := recordList.Get(title)
+		fmt.Print(password)
 	default:
 		// Нет флагов или неверные флаги
 		fmt.Fprintln(os.Stderr, "Неверные параметры")
