@@ -25,6 +25,7 @@ func main() {
 	getFlag := flag.String("get", "", "Получить пароль от сервиса <string> в stdout.")
 	deleteFlag := flag.String("del", "", "Удалить сервис <string> из списка.")
 	listFlag := flag.Bool("list", false, "Вывести названия сохранённых в списке сервисов.")
+	verboseFlag := flag.Bool("v", false, "Используется совместно с -list: вывод более подробной информации.")
 	flag.Parse()
 
 	recordList := &lockbox.List{}
@@ -72,7 +73,12 @@ func main() {
 
 	case *listFlag:
 		for _, rec := range *recordList {
-			fmt.Println(rec.Title)
+			if *verboseFlag {
+				dateFormat := "Mon Jan 2 2006 15:04:05 MST"
+				fmt.Println(fmt.Sprintf("%-16s Создан: %s, Изменён: %s", rec.Title, rec.CreatedAt.Format(dateFormat), rec.UpdatedAt.Format(dateFormat)))
+			} else {
+				fmt.Println(rec.Title)
+			}
 		}
 
 	default:
