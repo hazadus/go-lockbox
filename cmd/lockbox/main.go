@@ -24,6 +24,7 @@ func main() {
 	passwordFlag := flag.String("pwd", "", "Пароль <string>.")
 	getFlag := flag.String("get", "", "Получить пароль от сервиса <string> в stdout.")
 	deleteFlag := flag.String("del", "", "Удалить сервис <string> из списка.")
+	listFlag := flag.Bool("list", false, "Вывести названия сохранённых в списке сервисов.")
 	flag.Parse()
 
 	recordList := &lockbox.List{}
@@ -67,6 +68,11 @@ func main() {
 		if err := recordList.Save(lockboxFileName); err != nil {
 			fmt.Fprintln(os.Stderr, err)
 			os.Exit(1)
+		}
+
+	case *listFlag:
+		for _, rec := range *recordList {
+			fmt.Println(rec.Title)
 		}
 
 	default:

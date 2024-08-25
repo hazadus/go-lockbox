@@ -79,6 +79,20 @@ func TestLockboxCLI(t *testing.T) {
 		}
 	})
 
+	t.Run("ListRecords", func(t *testing.T) {
+		cmd := exec.Command(cmdPath, "-list")
+
+		output, err := cmd.CombinedOutput()
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		expected := fmt.Sprintf("%s\n", title)
+		if expected != string(output) {
+			t.Errorf("Expected %q, got %q instead\n", expected, string(output))
+		}
+	})
+
 	t.Run("DeleteRecord", func(t *testing.T) {
 		// Добавить запись, которую будем удалять
 		tempTitle := "temporaryRecord"

@@ -12,10 +12,11 @@ CLI tool для удобного хранения и использования 
 - ✅ Настройка файла для хранения списка через env var.
 - ✅ Тесты CLI.
 - Флаги команды:
-	- ✅ `-add service -pwd password`: добавить запись `service` с паролем `password`.
-	- ✅ `-get service`: получить пароль от записи `service`.
-	- [ ] `-delete service`
-	- [ ] `-list`
+	- ✅ `-add <service> -pwd <password>`: добавить запись `service` с паролем `password`.
+	- ✅ `-get <service>`: получить пароль от записи `service`.
+	- ✅ `-delete <service>`: удалить запись `service` из списка.
+	- ✅ `-list`: вывести перечень названий сервисов в списке.
+      - [ ] `-verbose`
 	- [ ] `-pin` (string)
 - [ ] Шифровать данные в файле с использованием PIN-кода.
 
@@ -28,6 +29,14 @@ make build
 sudo ln -s ~/Projects/go-lockbox/lockbox /usr/local/bin/lockbox
 ```
 
+По умолчанию, список хранится в файле `~/.lockbox.json`.
+
+Для хранения информации в другом файле, установите переменную окружения `GO_LOCKBOX_FILENAME`, например:
+
+```bash
+export GO_LOCKBOX_FILENAME=~/.my_lockbox.json
+```
+
 ## Как пользоваться
 
 После приведённой выше настройки, можно пользоваться `lockbox` из любой директории в системе. Примеры:
@@ -38,4 +47,10 @@ lockbox -add amgold.ru -pwd 12345678
 
 # Получить пароль и скопировать его в буфер обмена (MacOS)
 lockbox -get amgold.ru | pbcopy
+
+# Вывести перечень названий сервисов в списке
+lockbox -list
+
+# Удалить запись
+lockbox -del amgold.ru
 ```

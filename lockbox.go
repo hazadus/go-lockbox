@@ -55,7 +55,7 @@ func (l *List) Get(title string) (string, error) {
 }
 
 // Delete удаляет из списка запись с указанным title.
-func (l *List) Delete(title string) (error) {
+func (l *List) Delete(title string) error {
 	for i, rec := range *l {
 		if rec.Title == title {
 			*l = append((*l)[:i], (*l)[i+1:]...)
