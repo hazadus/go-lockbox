@@ -9,11 +9,32 @@ import (
 	"os"
 
 	"github.com/hazadus/go-lockbox"
+	"github.com/hazadus/go-lockbox/internal/encryption"
 )
 
 var lockboxFileName = "~/.lockbox.json"
 
 func main() {
+	// TODO: Check for GO_LOCKBOX_SECRET env var (16, 24, 32 bytes)
+	
+	// TODO: Use Encrypt / Decrypt in lockbox Save() / Load() methods
+	// DEMO:
+	StringToEncrypt := "Encrypting this string"
+	secret := "abc&1*a~#^2^#s0^=)^^7b34"
+
+	// To encrypt the StringToEncrypt
+	encText, err := encryption.Encrypt(StringToEncrypt, secret)
+	if err != nil {
+	 fmt.Println("error encrypting your classified text: ", err)
+	}
+	fmt.Println(encText)
+
+	decText, err := encryption.Decrypt(encText, secret)
+	if err != nil {
+		fmt.Println("error decrypting your encrypted text: ", err)
+	}
+	fmt.Println(decText)
+
 	// Получаем имя файла из переменной окружения (при наличии)
 	if envLockboxFileName := os.Getenv("GO_LOCKBOX_FILENAME"); envLockboxFileName != "" {
 		lockboxFileName = envLockboxFileName
