@@ -75,3 +75,25 @@ func TestGetFailsWithUnknownTitle(t *testing.T) {
 		t.Errorf("Expected '', got %q instead.", receivedPassword)
 	}
 }
+
+func TestDelete(t *testing.T) {
+	lockbox := lockbox.List{}
+	title1 := "service1"
+	password1 := "12345678"
+	title2 := "service2"
+	password2 := "87654321"
+	lockbox.Add(title1, password1)
+	lockbox.Add(title2, password2)
+
+	lockbox.Delete(title1)
+
+	if len(lockbox) != 1 {
+		t.Fatalf("Size of lockbox should be 1 after deletion.")
+	}
+	if lockbox[0].Title != title2 {
+		t.Errorf("Expected %q, got %q instead.", title2, lockbox[0].Title)
+	}
+	if lockbox[0].Password != password2 {
+		t.Errorf("Expected %q, got %q instead.", password2, lockbox[0].Password)
+	}
+}

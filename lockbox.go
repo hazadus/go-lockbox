@@ -54,6 +54,17 @@ func (l *List) Get(title string) (string, error) {
 	return "", fmt.Errorf("Item '%s' does not exist", title)
 }
 
+// Delete удаляет из списка запись с указанным title.
+func (l *List) Delete(title string) (error) {
+	for i, rec := range *l {
+		if rec.Title == title {
+			*l = append((*l)[:i], (*l)[i+1:]...)
+			return nil
+		}
+	}
+	return fmt.Errorf("Item '%s' does not exist", title)
+}
+
 // Save method сохраняет Lockbox в формате JSON в
 // указанном файле.
 func (l *List) Save(filename string) error {

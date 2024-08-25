@@ -1,2 +1,3 @@
-./lockbox
+lockbox
+!./cmd/lockbox
 *.json
