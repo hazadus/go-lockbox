@@ -78,4 +78,32 @@ func TestLockboxCLI(t *testing.T) {
 			t.Errorf("Expected %q, got %q instead\n", expected, string(output))
 		}
 	})
+
+	t.Run("DeleteRecord", func(t *testing.T) {
+		// Добавить запись, которую будем удалять
+		tempTitle := "temporaryRecord"
+		cmd := exec.Command(cmdPath, "-add", tempTitle, "-pwd", "12345678")
+
+		if err := cmd.Run(); err != nil {
+			t.Fatal(err)
+		}
+
+		// Удаляем
+		cmd = exec.Command(cmdPath, "-del", tempTitle)
+
+		if err := cmd.Run(); err != nil {
+			t.Fatal(err)
+		}
+
+		// Пробуем получить удалённую запись: ничего не должно вернуться
+		cmd = exec.Command(cmdPath, "-get", tempTitle)
+
+		output, err := cmd.CombinedOutput()
+		if err != nil {
+			t.Fatal(err)
+		}
+		if string(output) != "" {
+			t.Errorf("Got %q instead of empty string.\n", string(output))
+		}
+	})
 }
