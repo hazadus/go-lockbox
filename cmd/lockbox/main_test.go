@@ -11,10 +11,12 @@ import (
 
 var (
 	binName         = "lockbox_test"
-	lockboxFileName = ".lockbox_test.json"
+	lockboxFileName = ".lockbox_test_data"
+	secret          = "1234567890123456"
 )
 
 const envVarWithFileName = "GO_LOCKBOX_FILENAME"
+const envVarWithSecret = "GO_LOCKBOX_SECRET"
 
 func TestMain(m *testing.M) {
 	fmt.Println("Building tool...")
@@ -23,11 +25,13 @@ func TestMain(m *testing.M) {
 		binName += ".exe"
 	}
 
-	// Сохраним значение переменной окружения, чтобы
+	// Сохраним значения переменных окружения, чтобы
 	// изменить на время тестов, а потом вернуть, как
 	// было:
 	envLockboxFileName := os.Getenv(envVarWithFileName)
+	envSecret := os.Getenv(envVarWithSecret)
 	os.Setenv(envVarWithFileName, lockboxFileName)
+	os.Setenv(envVarWithSecret, secret)
 
 	buildCmd := exec.Command("go", "build", "-o", binName)
 	if err := buildCmd.Run(); err != nil {
@@ -43,6 +47,7 @@ func TestMain(m *testing.M) {
 	os.Remove(lockboxFileName)
 
 	os.Setenv(envVarWithFileName, envLockboxFileName)
+	os.Setenv(envVarWithSecret, envSecret)
 	os.Exit(result)
 }
 

@@ -11,9 +11,19 @@ import (
 	"github.com/hazadus/go-lockbox"
 )
 
-var lockboxFileName = "~/.lockbox.json"
+var lockboxFileName = "~/.lockbox"
 
 func main() {
+	secret, exists := os.LookupEnv("GO_LOCKBOX_SECRET")
+	if !exists {
+		fmt.Fprintln(os.Stderr, "Не установлено значение переменной окружения GO_LOCKBOX_SECRET.")
+		os.Exit(1)
+	}
+	if secretLen := len(secret); (secretLen != 16) && (secretLen != 24) && (secretLen != 32) {
+		fmt.Fprintln(os.Stderr, "Значение переменной окружения GO_LOCKBOX_SECRET должно иметь длину 16, 24 или 32 байта.")
+		os.Exit(1)
+	}
+
 	// Получаем имя файла из переменной окружения (при наличии)
 	if envLockboxFileName := os.Getenv("GO_LOCKBOX_FILENAME"); envLockboxFileName != "" {
 		lockboxFileName = envLockboxFileName
@@ -30,7 +40,7 @@ func main() {
 
 	recordList := &lockbox.List{}
 
-	if err := recordList.Load(lockboxFileName); err != nil {
+	if err := recordList.Load(lockboxFileName, secret); err != nil {
 		fmt.Fprintln(os.Stderr, err)
 		os.Exit(1)
 	}
@@ -48,7 +58,7 @@ func main() {
 		}
 
 		// Сохранить обновленный список в файл
-		if err := recordList.Save(lockboxFileName); err != nil {
+		if err := recordList.Save(lockboxFileName, secret); err != nil {
 			fmt.Fprintln(os.Stderr, err)
 			os.Exit(1)
 		}
@@ -66,12 +76,16 @@ func main() {
 		}
 
 		// Сохранить обновленный список в файл
-		if err := recordList.Save(lockboxFileName); err != nil {
+		if err := recordList.Save(lockboxFileName, secret); err != nil {
 			fmt.Fprintln(os.Stderr, err)
 			os.Exit(1)
 		}
 
 	case *listFlag:
+		if *verboseFlag {
+			fmt.Printf("Файл с паролями: %s\n\n", lockboxFileName)
+		}
+
 		for _, rec := range *recordList {
 			if *verboseFlag {
 				dateFormat := "Mon Jan 2 2006 15:04:05 MST"
