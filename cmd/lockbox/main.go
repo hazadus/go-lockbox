@@ -82,6 +82,10 @@ func main() {
 		}
 
 	case *listFlag:
+		if *verboseFlag {
+			fmt.Printf("Файл с паролями: %s\n\n", lockboxFileName)
+		}
+
 		for _, rec := range *recordList {
 			if *verboseFlag {
 				dateFormat := "Mon Jan 2 2006 15:04:05 MST"
