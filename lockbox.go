@@ -9,6 +9,8 @@ import (
 	"fmt"
 	"os"
 	"time"
+
+	"github.com/hazadus/go-lockbox/internal/encryption"
 )
 
 // record представляет хранимую запись
@@ -65,21 +67,26 @@ func (l *List) Delete(title string) error {
 	return fmt.Errorf("Item '%s' does not exist", title)
 }
 
-// Save method сохраняет Lockbox в формате JSON в
-// указанном файле.
-func (l *List) Save(filename string) error {
+// Save сохраняет Lockbox в формате JSON в указанном файле
+// в зашифрованном при помощи secret виде.
+func (l *List) Save(filename string, secret string) error {
 	jsonList, err := json.Marshal(l)
 	if err != nil {
 		return err
 	}
 
-	return os.WriteFile(filename, jsonList, 0644)
+	encryptedJSON, err := encryption.Encrypt(string(jsonList), secret)
+	if err != nil {
+		return err
+	}
+
+	return os.WriteFile(filename, []byte(encryptedJSON), 0644)
 }
 
-// Load загружает содержимое файла в формате JSON
-// в Lockbox.
-func (l *List) Load(filename string) error {
-	fileContent, err := os.ReadFile(filename)
+// Load загружает расшифровываем содержимое файла в формате JSON
+// при помощи secret и загружает в Lockbox.
+func (l *List) Load(filename string, secret string) error {
+	encryptedFileContent, err := os.ReadFile(filename)
 	if err != nil {
 		if errors.Is(err, os.ErrNotExist) {
 			return nil
@@ -87,9 +94,14 @@ func (l *List) Load(filename string) error {
 		return err
 	}
 
-	if len(fileContent) == 0 {
+	if len(encryptedFileContent) == 0 {
 		return nil
 	}
 
-	return json.Unmarshal(fileContent, l)
+	fileContent, err := encryption.Decrypt(string(encryptedFileContent), secret)
+	if err != nil {
+		return err
+	}
+
+	return json.Unmarshal([]byte(fileContent), l)
 }

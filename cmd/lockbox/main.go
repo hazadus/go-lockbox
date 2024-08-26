@@ -9,31 +9,20 @@ import (
 	"os"
 
 	"github.com/hazadus/go-lockbox"
-	"github.com/hazadus/go-lockbox/internal/encryption"
 )
 
-var lockboxFileName = "~/.lockbox.json"
+var lockboxFileName = "~/.lockbox"
 
 func main() {
-	// TODO: Check for GO_LOCKBOX_SECRET env var (16, 24, 32 bytes)
-	
-	// TODO: Use Encrypt / Decrypt in lockbox Save() / Load() methods
-	// DEMO:
-	StringToEncrypt := "Encrypting this string"
-	secret := "abc&1*a~#^2^#s0^=)^^7b34"
-
-	// To encrypt the StringToEncrypt
-	encText, err := encryption.Encrypt(StringToEncrypt, secret)
-	if err != nil {
-	 fmt.Println("error encrypting your classified text: ", err)
+	secret, exists := os.LookupEnv("GO_LOCKBOX_SECRET")
+	if !exists {
+		fmt.Fprintln(os.Stderr, "Не установлено значение переменной окружения GO_LOCKBOX_SECRET.")
+		os.Exit(1)
 	}
-	fmt.Println(encText)
-
-	decText, err := encryption.Decrypt(encText, secret)
-	if err != nil {
-		fmt.Println("error decrypting your encrypted text: ", err)
+	if secretLen := len(secret); (secretLen != 16) && (secretLen != 24) && (secretLen != 32) {
+		fmt.Fprintln(os.Stderr, "Значение переменной окружения GO_LOCKBOX_SECRET должно иметь длину 16, 24 или 32 байта.")
+		os.Exit(1)
 	}
-	fmt.Println(decText)
 
 	// Получаем имя файла из переменной окружения (при наличии)
 	if envLockboxFileName := os.Getenv("GO_LOCKBOX_FILENAME"); envLockboxFileName != "" {
@@ -51,7 +40,7 @@ func main() {
 
 	recordList := &lockbox.List{}
 
-	if err := recordList.Load(lockboxFileName); err != nil {
+	if err := recordList.Load(lockboxFileName, secret); err != nil {
 		fmt.Fprintln(os.Stderr, err)
 		os.Exit(1)
 	}
@@ -69,7 +58,7 @@ func main() {
 		}
 
 		// Сохранить обновленный список в файл
-		if err := recordList.Save(lockboxFileName); err != nil {
+		if err := recordList.Save(lockboxFileName, secret); err != nil {
 			fmt.Fprintln(os.Stderr, err)
 			os.Exit(1)
 		}
@@ -87,7 +76,7 @@ func main() {
 		}
 
 		// Сохранить обновленный список в файл
-		if err := recordList.Save(lockboxFileName); err != nil {
+		if err := recordList.Save(lockboxFileName, secret); err != nil {
 			fmt.Fprintln(os.Stderr, err)
 			os.Exit(1)
 		}
