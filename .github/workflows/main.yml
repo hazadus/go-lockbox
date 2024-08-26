@@ -18,8 +18,19 @@ jobs:
       with:
         go-version: 1.17
 
+    - name: Test
+      run: make test
+    
     - name: Build
       run: make build
 
-    - name: Test
-      run: make test
+    - name: Copy Files
+      run: |
+          mkdir artifacts
+          cp lockbox artifacts/.
+    
+    - name: Archive
+      uses: actions/upload-artifact@v2
+      with:
+          name: lockbox
+          path: artifacts
