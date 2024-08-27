@@ -1,5 +1,5 @@
 build:
-	go build -o lockbox ./cmd/lockbox/main.go
+	go build -o ./bin/lockbox ./cmd/lockbox/main.go
 test:
 	go test -v ./...
 format:

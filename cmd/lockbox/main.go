@@ -8,7 +8,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/hazadus/go-lockbox"
+	"github.com/hazadus/go-lockbox/internal/lockbox"
 )
 
 var lockboxFileName = "~/.lockbox"

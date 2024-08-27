@@ -3,7 +3,7 @@ package lockbox_test
 import (
 	"testing"
 
-	lockbox "github.com/hazadus/go-lockbox"
+	lockbox "github.com/hazadus/go-lockbox/internal/lockbox"
 )
 
 func TestAdd(t *testing.T) {

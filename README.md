@@ -2,7 +2,7 @@
 
 CLI tool для удобного хранения и использования паролей.
 
-Утилита создана мной в ходе [изучения языка Go](https://hazadus.github.io/knowledge/Languages/Go/Go) для личного использования. 
+Утилита создана мной в ходе [изучения языка Go](https://hazadus.github.io/knowledge/Languages/Go/Go) для личного использования.
 
 ----
 
@@ -25,7 +25,7 @@ CLI tool для удобного хранения и использования 
 
 ```bash
 make build
-sudo ln -s ~/Projects/go-lockbox/lockbox /usr/local/bin/lockbox
+sudo ln -s ~/Projects/go-lockbox/bin/lockbox /usr/local/bin/lockbox
 ```
 
 Установите значение переменной-секрета, применямого для шифрования и дешифрования файла с паролями:
@@ -44,6 +44,8 @@ export GO_LOCKBOX_SECRET="1234567890123456"
 ```bash
 export GO_LOCKBOX_FILENAME=~/.my_lockbox
 ```
+
+Рекомендуется сохранить значения переменных окружения в файлах настройки оболочки (`~/.bashrc`, `~/.zshrc`, и т.п.).
 
 ## Как пользоваться
 
